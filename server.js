@@ -20,6 +20,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Use routes
 app.use('/api', require('./routes/update-bill'));
+app.use('/api', require('./routes/get-bill')); // Correct route
 
 // Start server
 const PORT = process.env.PORT || 5000;
