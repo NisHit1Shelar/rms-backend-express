@@ -57,9 +57,9 @@ app.patch('/api/update-bill/:tableId', async (req, res) => {
     const { tableId } = req.params;
     const { items, total } = req.body;
 
-    console.log("Received request for table:", tableId);
-    console.log("Items:", items);
-    console.log("Total:", total);
+    console.log("Received request to update bill for table:", tableId);
+    console.log("Items received:", items);
+    console.log("New total received:", total);
 
     try {
         const existingOrder = await Bill.findOne({ table: tableId });
@@ -68,17 +68,16 @@ app.patch('/api/update-bill/:tableId', async (req, res) => {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // Append new items to the existing items
+        // Append new items or update quantity
         items.forEach(newItem => {
             const existingItem = existingOrder.items.find(item => item.id === newItem.id);
             if (existingItem) {
-                existingItem.quantity += newItem.quantity; // Update quantity if the item already exists
+                existingItem.quantity += newItem.quantity;
             } else {
-                existingOrder.items.push(newItem); // Add new item if it doesn't exist
+                existingOrder.items.push(newItem);
             }
         });
 
-        // Update the total amount
         existingOrder.total += parseFloat(total);
         await existingOrder.save();
 
@@ -89,6 +88,7 @@ app.patch('/api/update-bill/:tableId', async (req, res) => {
         res.status(500).json({ message: 'Error updating bill', error });
     }
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
