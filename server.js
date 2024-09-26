@@ -5,6 +5,9 @@ const cors = require('cors');
 const http = require('http'); // To set up server for socket.io
 const socketIo = require('socket.io');
 
+// Import the Bill model
+const Bill = require('./models/Bill'); 
+
 // Initialize Express
 const app = express();
 const server = http.createServer(app); // Create an HTTP server
