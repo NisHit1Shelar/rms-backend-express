@@ -2,13 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
 const http = require('http'); // To set up server for socket.io
 const socketIo = require('socket.io');
+const path = require('path'); // Import to handle static file serving
 
 // Import the Bill model
-const Bill = require('./models/Bill');
+const Bill = require('./models/Bill'); 
 
 // Initialize Express
 const app = express();
@@ -38,6 +37,9 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api', require('./routes/update-bill'));
 app.use('/api', require('./routes/get-bill'));
+
+// Serve static files, including menu.json
+app.use(express.static(path.join(__dirname)));
 
 // Handle socket.io connection
 io.on('connection', (socket) => {
@@ -94,22 +96,9 @@ app.patch('/api/update-bill/:tableId', async (req, res) => {
     }
 });
 
-// Route to handle updating the menu.json
-app.post('/api/update-menu', (req, res) => {
-    const updatedMenu = req.body; // Get the updated menu from the request body
-
-    // Path to the menu.json file
-    const menuPath = path.join(__dirname, 'menu.json');
-
-    // Write the updated menu to menu.json
-    fs.writeFile(menuPath, JSON.stringify(updatedMenu, null, 2), 'utf-8', (err) => {
-        if (err) {
-            console.error('Error writing to menu.json:', err);
-            return res.status(500).send({ message: 'Failed to update menu' });
-        }
-
-        res.status(200).send({ message: 'Menu updated successfully!' });
-    });
+// Endpoint to serve menu.json
+app.get('/menu.json', (req, res) => {
+    res.sendFile(path.join(__dirname, 'menu.json'));
 });
 
 // Start the server
