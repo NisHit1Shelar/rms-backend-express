@@ -1,0 +1,52 @@
+{
+    "Starters": {
+        "Veg": [
+            { "id": 1, "name": "Spring Rolls", "price": 120 },
+            { "id": 2, "name": "Paneer Tikka", "price": 150 },
+            { "id": 3, "name": "Veg Manchurian", "price": 130 },
+            { "id": 4, "name": "Cheese Balls", "price": 140 }
+        ],
+        "Non-Veg": [
+            { "id": 5, "name": "Chicken Wings", "price": 200 },
+            { "id": 6, "name": "Fish Fry", "price": 250 },
+            { "id": 7, "name": "Prawn Tempura", "price": 300 }
+        ]
+    },
+    "Main Course": {
+        "Veg": [
+            { "id": 8, "name": "Paneer Butter Masala", "price": 200 },
+            { "id": 9, "name": "Veg Biryani", "price": 180 },
+            { "id": 10, "name": "Dal Makhani", "price": 160 }
+        ],
+        "Non-Veg": [
+            { "id": 11, "name": "Chicken Biryani", "price": 220 },
+            { "id": 12, "name": "Mutton Curry", "price": 300 },
+            { "id": 13, "name": "Chicken Curry", "price": 240 }
+        ]
+    },
+    "Soups": {
+        "Veg": [
+            { "id": 14, "name": "Tomato Soup", "price": 90 },
+            { "id": 15, "name": "Sweet Corn Soup", "price": 100 }
+        ],
+        "Non-Veg": [
+            { "id": 16, "name": "Chicken Soup", "price": 120 },
+            { "id": 17, "name": "Prawn Soup", "price": 150 }
+        ]
+    },
+    "Desserts": {
+        "Veg": [
+            { "id": 18, "name": "Gulab Jamun", "price": 50 },
+            { "id": 19, "name": "Ras Malai", "price": 80 },
+            { "id": 20, "name": "Ice Cream", "price": 70 }
+        ]
+    },
+    "Beverages": {
+        "Drinks": [
+            { "id": 21, "name": "Coca Cola", "price": 40 },
+            { "id": 22, "name": "Pepsi", "price": 40 },
+            { "id": 23, "name": "Lemonade", "price": 50 },
+            { "id": 24, "name": "Iced Tea", "price": 60 }
+        ]
+    }
+}
