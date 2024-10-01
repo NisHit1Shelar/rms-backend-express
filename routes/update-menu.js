@@ -6,6 +6,7 @@ const router = express.Router();
 // Route to handle updating the menu.json
 router.post('/update-menu', (req, res) => {
     const updatedMenu = req.body; // Get the new menu from the request body
+    console.log('Received updated menu:', updatedMenu); // Log incoming data
 
     // Path to menu.json file
     const menuPath = path.join(__dirname, '../menu.json');
@@ -17,6 +18,7 @@ router.post('/update-menu', (req, res) => {
             return res.status(500).send({ message: 'Failed to update menu' });
         }
 
+        console.log('Menu updated successfully.');
         res.status(200).send({ message: 'Menu updated successfully!' });
     });
 });
