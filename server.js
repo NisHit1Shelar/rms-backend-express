@@ -5,6 +5,7 @@ const cors = require('cors');
 const http = require('http'); // To set up server for socket.io
 const socketIo = require('socket.io');
 const path = require('path'); // Import to handle static file serving
+const updateMenuRoute = require('./routes/update-menu'); 
 
 
 // Import the Bill model
@@ -27,6 +28,7 @@ const io = socketIo(server, {
 app.use(bodyParser.json());
 app.use(cors()); // Enable CORS for frontend-backend communication
 
+
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -39,7 +41,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api', require('./routes/update-bill'));
 app.use('/api', require('./routes/get-bill'));
 app.use('/api', require('./routes/menu-routes'));
-
+app.use('/api', updateMenuRoute);
 
 // Serve static files, including menu.json
 app.use(express.static(path.join(__dirname)));
