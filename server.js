@@ -6,6 +6,7 @@ const http = require('http'); // To set up server for socket.io
 const socketIo = require('socket.io');
 const path = require('path'); // Import to handle static file serving
 
+
 // Import the Bill model
 const Bill = require('./models/Bill'); 
 
@@ -37,6 +38,8 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api', require('./routes/update-bill'));
 app.use('/api', require('./routes/get-bill'));
+app.use('/api', require('./routes/menu-routes'));
+
 
 // Serve static files, including menu.json
 app.use(express.static(path.join(__dirname)));
