@@ -11,7 +11,7 @@ const menuPath = path.join(__dirname, '../menu.json');
 router.post('/update-menu', (req, res) => {
     const updatedMenu = req.body;
 
-    // Check if the updatedMenu is in the correct format
+    // Ensure the updatedMenu has the correct structure
     if (!updatedMenu || typeof updatedMenu !== 'object') {
         return res.status(400).json({ message: 'Invalid menu format' });
     }
@@ -28,7 +28,7 @@ router.post('/update-menu', (req, res) => {
     });
 });
 
-// Endpoint to get the menu for viewing
+// GET: Retrieve the menu for viewing
 router.get('/menu', (req, res) => {
     fs.readFile(menuPath, 'utf-8', (err, data) => {
         if (err) {
