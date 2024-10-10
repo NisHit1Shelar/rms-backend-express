@@ -1,4 +1,4 @@
-require('dotenv').config(); // Should only be included once
+require('dotenv').config(); // Load environment variables first
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,7 +8,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 
-
+const updateMenuRoute = require('./routes/menu-routes');
 
 
 // Import the Bill model
@@ -42,7 +42,7 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api', require('./routes/update-bill'));
 app.use('/api', require('./routes/get-bill'));
-app.use('/api', require('./routes/menu-routes'));
+app.use('/api', updateMenuRoute);
 
 
 // Serve static files, including menu.json
