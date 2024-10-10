@@ -1,10 +1,13 @@
+require('dotenv').config(); // Should only be included once
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const http = require('http'); // To set up server for socket.io
+const http = require('http');
 const socketIo = require('socket.io');
-const path = require('path'); // Import to handle static file serving
+const path = require('path');
+const updateMenuRoute = require('./routes/menu-routes'); 
 
 
 
@@ -15,7 +18,6 @@ const Bill = require('./models/Bill');
 const app = express();
 const server = http.createServer(app); // Create an HTTP server
 
-require('dotenv').config();
 
 // Initialize socket.io
 const io = socketIo(server, {
