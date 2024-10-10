@@ -5,7 +5,8 @@ const cors = require('cors');
 const http = require('http'); // To set up server for socket.io
 const socketIo = require('socket.io');
 const path = require('path'); // Import to handle static file serving
-const updateMenuRoute = require('./routes/update-menu'); 
+const fs = require('fs');
+require('dotenv').config();
 
 
 // Import the Bill model
@@ -41,7 +42,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api', require('./routes/update-bill'));
 app.use('/api', require('./routes/get-bill'));
 app.use('/api', require('./routes/menu-routes'));
-app.use('/api', updateMenuRoute);
+
 
 // Serve static files, including menu.json
 app.use(express.static(path.join(__dirname)));
@@ -103,8 +104,16 @@ app.patch('/api/update-bill/:tableId', async (req, res) => {
 
 // Endpoint to serve menu.json
 app.get('/menu.json', (req, res) => {
-    res.sendFile(path.join(__dirname, 'menu.json'));
+    const menuPath = path.join(__dirname, 'menu.json');
+    fs.access(menuPath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error('Menu file not found:', err);
+            return res.status(404).json({ message: 'Menu file not found' });
+        }
+        res.sendFile(menuPath);
+    });
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
