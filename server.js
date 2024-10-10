@@ -5,8 +5,7 @@ const cors = require('cors');
 const http = require('http'); // To set up server for socket.io
 const socketIo = require('socket.io');
 const path = require('path'); // Import to handle static file serving
-const fs = require('fs');
-require('dotenv').config();
+
 
 
 // Import the Bill model
