@@ -64,6 +64,22 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
     });
+
+//button logic
+console.log('New client connected:', socket.id);
+
+    // Listen for button press from ESP32
+    socket.on('buttonPress', (data) => {
+        console.log('Button press received:', data);
+
+        // Forward the button press event to all connected clients (frontend)
+        io.emit('buttonAlert', data); // Emit to all connected clients
+    });
+
+    // Handle disconnection
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+    });
 });
 
 // PATCH route to update the bill
