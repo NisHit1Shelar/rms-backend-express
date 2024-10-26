@@ -10,14 +10,12 @@ const path = require('path');
 
 const updateMenuRoute = require('./routes/menu-routes');
 
-
 // Import the Bill model
 const Bill = require('./models/Bill'); 
 
 // Initialize Express
 const app = express();
 const server = http.createServer(app); // Create an HTTP server
-
 
 // Initialize socket.io
 const io = socketIo(server, {
@@ -30,20 +28,21 @@ const io = socketIo(server, {
 app.use(bodyParser.json());
 app.use(cors()); // Enable CORS for frontend-backend communication
 
-
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+.catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit on MongoDB connection failure (optional, safer)
+});
 
 // Routes
 app.use('/api', require('./routes/update-bill'));
 app.use('/api', require('./routes/get-bill'));
 app.use('/api', updateMenuRoute);
-
 
 // Serve static files, including menu.json
 app.use(express.static(path.join(__dirname)));
@@ -60,15 +59,7 @@ io.on('connection', (socket) => {
         io.emit('newOrder', data);
     });
 
-    // Handle disconnection
-    socket.on('disconnect', () => {
-        console.log('Client disconnected:', socket.id);
-    });
-
-//button logic
-console.log('New client connected:', socket.id);
-
-    // Listen for button press from ESP32
+    // Listen for button press from ESP32 (no changes here)
     socket.on('buttonPress', (data) => {
         console.log('Button press received:', data);
 
@@ -76,7 +67,7 @@ console.log('New client connected:', socket.id);
         io.emit('buttonAlert', data); // Emit to all connected clients
     });
 
-    // Handle disconnection
+    // Handle disconnection (one disconnection handler is enough)
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
     });
@@ -130,7 +121,6 @@ app.get('/menu.json', (req, res) => {
         res.sendFile(menuPath);
     });
 });
-
 
 // Start the server
 const PORT = process.env.PORT || 5000;
