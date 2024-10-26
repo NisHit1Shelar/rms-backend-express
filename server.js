@@ -20,7 +20,10 @@ const server = http.createServer(app); // Create an HTTP server
 // Initialize socket.io
 const io = socketIo(server, {
     cors: {
-        origin: "*" // Allow all origins (you can restrict this if needed)
+       origin: "*", // Allow all origins
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
     }
 });
 
