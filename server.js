@@ -7,6 +7,7 @@ const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
+const mqtt = require('mqtt'); // Add MQTT library
 
 const updateMenuRoute = require('./routes/menu-routes');
 const Bill = require('./models/Bill'); // Import the Bill model
@@ -15,7 +16,7 @@ const app = express();
 const server = http.createServer(app); // Create an HTTP server
 const io = socketIo(server, {
     cors: {
-       origin: "*", // Allow all origins
+        origin: "*", // Allow all origins
         methods: ["GET", "POST"],
         allowedHeaders: ["my-custom-header"],
         credentials: true
@@ -36,6 +37,30 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch(err => {
     console.error('MongoDB connection error:', err);
     process.exit(1); // Exit on MongoDB connection failure
+});
+
+// MQTT Setup
+const mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL); // Replace with your broker URL
+
+// When connected to MQTT broker
+mqttClient.on('connect', () => {
+    console.log('Connected to MQTT broker');
+    // Subscribe to a topic where ESP32 is publishing
+    mqttClient.subscribe('restaurant/waiter', (err) => {
+        if (err) {
+            console.error('Failed to subscribe to topic:', err);
+        } else {
+            console.log('Subscribed to topic: restaurant/waiter');
+        }
+    });
+});
+
+// Listen for incoming MQTT messages
+mqttClient.on('message', (topic, message) => {
+    console.log(`Received message on topic ${topic}:`, message.toString());
+    
+    // Process the message and send it to all connected clients via Socket.io
+    io.emit('mqttMessage', { message: message.toString() });
 });
 
 // Routes
