@@ -33,24 +33,23 @@ mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB connected'))
-.catch(err => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1); // Exit on MongoDB connection failure
-});
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1); // Exit on MongoDB connection failure
+    });
 
 // MQTT Setup
 const mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL); // Replace with your broker URL
 
-// When connected to MQTT broker
 mqttClient.on('connect', () => {
     console.log('Connected to MQTT broker');
-    // Subscribe to a topic where ESP32 is publishing
-    mqttClient.subscribe('restaurant/waiter', (err) => {
+    // Subscribe to topics
+    mqttClient.subscribe(['restaurant/waiter', 'restaurant/bill'], (err) => {
         if (err) {
-            console.error('Failed to subscribe to topic:', err);
+            console.error('Failed to subscribe to topics:', err);
         } else {
-            console.log('Subscribed to topic: restaurant/waiter');
+            console.log('Subscribed to topics: restaurant/waiter, restaurant/bill');
         }
     });
 });
@@ -58,9 +57,19 @@ mqttClient.on('connect', () => {
 // Listen for incoming MQTT messages
 mqttClient.on('message', (topic, message) => {
     console.log(`Received message on topic ${topic}:`, message.toString());
-    
-    // Process the message and send it to all connected clients via Socket.io
-    io.emit('mqttMessage', { message: message.toString() });
+
+    let alertType = '';
+    if (topic === 'restaurant/waiter') {
+        alertType = 'Waiter Requested';
+    } else if (topic === 'restaurant/bill') {
+        alertType = 'Bill Requested';
+    }
+
+    // Emit the alert to all connected clients
+    if (alertType) {
+        io.emit('mqttMessage', { type: alertType, message: message.toString() });
+        console.log(`Alert broadcasted: ${alertType}`);
+    }
 });
 
 // Routes
